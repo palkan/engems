@@ -1,0 +1,78 @@
+#!/usr/bin/env ruby
+
+# frozen_string_literal: true
+
+require "set"
+
+module DirtyCI
+  # The list of branches which should not
+  # use dirty checking and run all checks always
+  ALWAYS_RUN = %w[master].freeze
+
+  module_function
+  def build_dependency_index
+    pattern = File.join(__dir__, "../{engines,gems}/*/*.gemspec")
+
+    gemspecs = Dir.glob(pattern).map do |gemspec_file|
+      Gem::Specification.load(gemspec_file)
+    end
+
+    names = gemspecs.each_with_object({}) do |gemspec, hash|
+      hash[gemspec.name] = []
+    end
+
+    tree = gemspecs.each_with_object(names) do |gemspec, hash|
+      deps = Set.new(gemspec.dependencies.map(&:name)) + Set.new(gemspec.development_dependencies.map(&:name))
+      local_deps = deps & Set.new(names.keys)
+      local_deps.each do |local_dep|
+        hash[local_dep] << gemspec.name
+      end
+    end
+
+    # invert tree to show which gem depends on what
+    tree.each_with_object(Hash.new { |h, k| h[k] = Set.new }) do |(name, deps), index|
+      deps.each { |dep| index[dep] << name }
+      index
+    end
+  end
+
+  def dirty_libraries
+    changed_files = `git diff $(git merge-base origin/master HEAD) --name-only`.split("\n")
+    raise "failed to get changed files" unless $?.success?
+
+    changed_files.each_with_object(Set.new) do |file, changeset|
+      case file
+      when %r{^gems/([^\/]+)}
+        changeset << Regexp.last_match[1]
+      when %r{^engines/([^\/]+)}
+        changeset << Regexp.last_match[1]
+      end
+
+      changeset
+    end
+  end
+
+  def dirty?(name)
+    current_branch = `git rev-parse --abbrev-ref HEAD`.tr("/", "--").chomp
+    return true if ALWAYS_RUN.include?(current_branch)
+
+    libs = dirty_libraries
+
+    return true if libs.include?(name)
+
+    deps = build_dependency_index[name]
+
+    (deps & libs).any?
+  end
+end
+
+if ARGV.size == 1
+  lib_name = ARGV[0]
+  if DirtyCI.dirty?(lib_name)
+    $stdout.puts "[Dirty Check] #{lib_name} is dirty"
+    exit(1)
+  else
+    $stdout.puts "[Dirty Check] No changes for #{lib_name}. Skip"
+    exit(0)
+  end
+end

@@ -1,8 +1,17 @@
-# engems
+# Engems
 
-Rails component-based architecture on top of engines and gems.
+This resository contains examples/scripts for building Rails component-based architecture on top of engines and gems.
 
-_Coming soon_
+<p align="center">
+  <a href="https://coggle.it/diagram/XWb1MGn5-5cWTBOx/t/engems">
+    <img src="./assets/map.png" alt="Engems map" width="600">
+  </a>
+</p>
+
+## Guides
+
+- [Organizing dependencies/gemfiles](./guides/gemfiles.md)
+- [Testing](./guides/testing.md)
 
 ## Resources
 
