@@ -1,0 +1,4 @@
+# frozen_string_literal: true
+
+eval_gemfile "../shared-factory/Gemfile.runtime"
+gem "shared-factory", path: "../shared-factory"

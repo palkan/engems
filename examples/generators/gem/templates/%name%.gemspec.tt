@@ -1,0 +1,23 @@
+# frozen_string_literal: true
+
+$LOAD_PATH.push File.expand_path("lib", __dir__)
+
+require "<%= name %>/version"
+
+Gem::Specification.new do |s|
+  s.name = "<%= name %>"
+  s.version = <%= class_name %>::VERSION
+  s.authors = ["Vicinity"]
+  s.summary = "TODO:"
+
+  s.files = Dir["{config,lib}/**/*", "Rakefile"]
+  s.require_paths = ["lib"]
+
+  s.add_development_dependency "bundler", ">= 2"
+  s.add_development_dependency "pry-byebug", ">= 3.4"
+  s.add_development_dependency "rake", "~> 13.0"
+
+  # Internal
+  s.add_development_dependency "common-rubocop"
+  s.add_development_dependency "common-testing"
+end

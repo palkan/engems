@@ -1,0 +1,2 @@
+inherit_gem:
+  shared-rubocop: config/base.yml

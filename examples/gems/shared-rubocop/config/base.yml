@@ -1,0 +1,43 @@
+inherit_from: "./rspec.yml"
+
+require:
+  - shared/rubocop
+  - rubocop-rails
+  - rubocop-performance
+  - standard/cop/semantic_blocks
+
+inherit_gem:
+  standard: config/base.yml
+
+AllCops:
+  TargetRubyVersion: 2.6
+  Exclude:
+    - 'bin/*'
+    - 'tmp/**/*'
+    - 'node_modules/**/*'
+    - 'vendor/**/*'
+  DisplayCopNames: true
+
+Style/FrozenStringLiteralComment:
+  Enabled: true
+
+Standard/SemanticBlocks:
+  Enabled: false
+
+Lint/UselessAssignment:
+  Exclude:
+    - 'spec/**/*.rb'
+    - 'test/**/*.rb'
+
+Lint/AmbiguousBlockAssociation:
+  Exclude:
+    - 'spec/**/*.rb'
+    - 'test/**/*.rb'
+
+Rails/Output:
+  Enabled: true
+  Exclude:
+    - 'lib/tasks/**/*'
+
+Gemspec/OrderedDependencies:
+  Enabled: true

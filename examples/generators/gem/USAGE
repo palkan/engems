@@ -1,0 +1,5 @@
+Description:
+    This generator creates skeleton of a shared gem for the project.
+
+Example:
+    rails generate gem <name>

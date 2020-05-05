@@ -1,0 +1,6 @@
+test:
+  adapter: postgresql
+  url: <%%= ENV["DATABASE_URL"].sub("postgres://", "postgis://") %>
+  pool: <%%= ENV["DB_POOL_SIZE"] || 5 %>
+  timeout: 5000
+  database: engine_<%= name %>_test

@@ -1,0 +1,11 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+require "bundler/setup"
+
+ENGINE_ROOT = File.expand_path("..", __dir__)
+ENGINE_PATH = File.expand_path("../lib/<%= name %>/engine", __dir__)
+
+require_relative "../spec/rails_helper"
+
+require "rails/engine/commands"

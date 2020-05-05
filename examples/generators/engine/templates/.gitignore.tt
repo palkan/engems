@@ -1,0 +1,16 @@
+log/*.log
+pkg/
+spec/internal/log/*.log
+spec/internal/tmp/
+spec/examples.txt
+tmp/
+/node_modules
+/public/packs*
+yarn-debug.log*
+.yarn-integrity
+package-lock.json
+yarn-error.log
+.offspring
+.rspec-local
+/.pry_history
+/test-results

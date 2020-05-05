@@ -13,6 +13,11 @@ This resository contains examples/scripts for building Rails component-based arc
 - [Organizing dependencies/gemfiles](./guides/gemfiles.md)
 - [Testing](./guides/testing.md)
 
+## Examples
+
+- [Generators](./examples/generators)
+- [Local gems](./examples/gems)
+
 ## Resources
 
 - "Engine-ering Rails apps" at Saint-P Ruby ([slides](https://speakerdeck.com/palkan/saint-p-ruby-meetup-engine-ering-rails-apps))

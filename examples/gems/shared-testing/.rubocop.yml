@@ -1,0 +1,6 @@
+inherit_gem:
+  shared-rubocop: config/base.yml
+
+Naming/FileName:
+  Exclude:
+   - "lib/shared-testing.rb"

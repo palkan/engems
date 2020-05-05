@@ -1,0 +1,17 @@
+# frozen_string_literal: true
+
+source "https://rubygems.org"
+
+git_source(:github) do |repo_name|
+  repo_name = "#{repo_name}/#{repo_name}" unless repo_name.include?("/")
+  "https://github.com/#{repo_name}.git"
+end
+
+gemspec
+
+eval_gemfile "./Gemfile.runtime"
+
+eval_gemfile "../shared-testing/Gemfile.runtime"
+gem "shared-testing", path: "../shared-testing"
+
+gem "shared-rubocop", path: "../shared-rubocop"

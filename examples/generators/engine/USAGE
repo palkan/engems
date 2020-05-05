@@ -1,0 +1,5 @@
+Description:
+    This generator creates skeleton of basic engine.
+
+Example:
+    rails generate engine <name>
