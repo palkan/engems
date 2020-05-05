@@ -30,7 +30,7 @@ class Bundler::Dsl
               next if current.source.is_a?(Bundler::Source::Path)
             end
 
-            gem dep.name, dep.requirement
+            gem dep.name, *dep.requirement.to_s.split(/,\s*/)
           end
         end
       end
