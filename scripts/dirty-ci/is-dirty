@@ -10,6 +10,7 @@ module DirtyCI
   ALWAYS_RUN = %w[master].freeze
 
   module_function
+
   def build_dependency_index
     pattern = File.join(__dir__, "../{engines,gems}/*/*.gemspec")
 

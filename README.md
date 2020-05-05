@@ -1,6 +1,6 @@
 # Engems
 
-This resository contains examples/scripts for building Rails component-based architecture on top of engines and gems.
+This repository contains examples/scripts for building Rails component-based architecture on top of engines and gems.
 
 <p align="center">
   <a href="https://coggle.it/diagram/XWb1MGn5-5cWTBOx/t/engems">

@@ -1,11 +1,16 @@
-inherit_from: ".rubocop.yml"
+inherit_gem:
+  standard: config/base.yml
 
 require:
+  - standard/cop/semantic_blocks
   - rubocop-md
 
 AllCops:
   Include:
     - '**/*.md'
+
+Standard/SemanticBlocks:
+  Enabled: false
 
 Lint/Void:
   Exclude:
