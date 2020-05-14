@@ -19,6 +19,10 @@ This repository contains examples/scripts for building Rails component-based arc
 - [Generators](./examples/generators)
 - [Local gems](./examples/gems)
 
+## Scripts
+
+- [bin/engem](./scripts/engem-cli)—CLI to manage components from the project's root
+
 ## Resources
 
 - "Between monoliths and microservices" at RailsConf ([slides and video](https://noti.st/palkan/VWPOSd/between-monoliths-and-microservices))

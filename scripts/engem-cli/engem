@@ -1,0 +1,165 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+begin
+  require "thor"
+  require "bundler"
+rescue LoadError
+  require "bundler/inline"
+
+  gemfile do
+    source "https://rubygems.org"
+    gem "thor"
+  end
+
+  require "thor"
+end
+
+require "shellwords"
+
+class EngineGemCLI < Thor
+  class CommandFailedException < StandardError; end
+
+  RESERVED_COMMANDS = %i[all gems engines].freeze
+
+  class_option :ignore_failures, type: :boolean, default: false
+
+  def self.exit_on_failure?
+    true
+  end
+
+  desc "NAME bundle [OPTIONS]", "Run Engine's `bundle` command"
+  def bundle(*args)
+    exec_command("bundle", *args)
+  end
+
+  %w[rake rubocop rspec].each do |cmd|
+    desc "NAME #{cmd} [OPTIONS]", "Run Engine's `#{cmd}` command"
+    define_method(cmd) do |*args|
+      bundle(*(["exec", cmd] + args))
+    end
+  end
+
+  desc "NAME console", "Run Engine's console"
+  def console
+    exec_command("./bin/console")
+  end
+
+  desc "NAME rails", "Run Engine's Rails commands"
+  def rails(*args)
+    exec_command("./bin/rails", *args)
+  end
+
+  desc "NAME yarn", "Run Engine's Yarn commands"
+  def yarn(*args)
+    exec_command("yarn", *args)
+  end
+
+  desc "NAME build", "Install deps, run linters and tests for the engine"
+  method_option :skip_rspec, type: :boolean, default: false
+  method_option :skip_rubocop, type: :boolean, default: false
+  def build
+    bundle("--quiet")
+    rubocop("--safe-auto-correct") unless options["skip_rubocop"]
+    rspec unless options["skip_rspec"]
+  end
+
+  def method_missing(engine_or_gem, *args) # rubocop:disable Style/MissingRespondToMissing
+    options =
+      case engine_or_gem.to_s
+      when "all"
+        {all: true}
+      when "all-gems"
+        {all_gems: true}
+      when "all-engines"
+        {all_engines: true}
+      when *engines
+        {engine: engine_or_gem.to_s}
+      when *gems
+        {engine: engine_or_gem.to_s, gem: true}
+      end
+
+    return super if options.nil?
+
+    self.class.start(args, class_options: options)
+  end
+
+  private
+
+  def engine
+    @engine ||= options[:engine] || ENV["ENGINE"]
+  end
+
+  def engines
+    @engines ||= Dir["*", base: "engines"]
+  end
+
+  def gems
+    @gems ||= Dir["*", base: "gems"]
+  end
+
+  def engine_root
+    @engine_root ||= "#{options[:gem] ? "gems" : "engines"}/#{engine}"
+  end
+
+  def app_root
+    @app_root ||= File.expand_path("..", __dir__)
+  end
+
+  def exec_command(*args)
+    if options[:all] || options[:all_gems] || options[:all_engines]
+      if options[:all] || options[:all_gems]
+        gems.each do |gem|
+          subshell "gems/#{gem}", *args
+        end
+      end
+
+      if options[:all] || options[:all_engines]
+        engines.each do |engine|
+          subshell "engines/#{engine}", *args
+        end
+      end
+    else
+      if engine.nil? || engine.empty?
+        # Try to find engine name from args
+        @engine = args.each do |arg|
+          next unless match = arg&.match(%r{^(engines|gems)/(?<name>[a-z_]+)}) # rubocop:disable Lint/AssignmentInCondition
+          break match[:name]
+        end
+
+        if engine
+          args.map! { |arg| arg ? arg.sub("#{engine_root}/", "") : arg }
+        else
+          raise "Engine name has not been provided."
+        end
+      end
+
+      subshell(engine_root, *args)
+    end
+  end
+
+  def subshell(dir, cmd, *args)
+    Bundler.with_original_env do
+      new_root = File.join(app_root, dir)
+
+      Dir.chdir(new_root) do
+        return if Kernel.system(cmd, *args)
+      end
+    end
+
+    msg = "Command '#{cmd}' (from #{dir}) returned non-zero exit code"
+
+    $stdout.puts msg
+    raise CommandFailedException, msg unless options["ignore_failures"]
+  end
+end
+
+begin
+  EngineGemCLI.start(ARGV)
+rescue EngineGemCLI::CommandFailedException => e
+  if ENV["DEBUG"]
+    puts "Command failed with: #{e.message}"
+    puts e.backtrace.take(15).join("\n")
+  end
+  exit(1)
+end
