@@ -18,7 +18,7 @@ bin/engem core_by console
 bin/engem core_by build
 
 # you can omit running rspec/rubocop by providing `--skip-rspec`/`--skip-rubocop` option:
-bin/engem common-rubocop build --skip-rspec
+bin/engem shared-rubocop build --skip-rspec
 
 # generate a migration
 bin/engem core_by rails g migration <name>

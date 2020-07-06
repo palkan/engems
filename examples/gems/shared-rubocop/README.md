@@ -1,4 +1,4 @@
-# Common RuboCop
+# Shared RuboCop
 
 RuboCop configuration for usage in a project.
 
