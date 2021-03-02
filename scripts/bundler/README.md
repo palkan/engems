@@ -4,7 +4,7 @@
 
 [Source](./component.rb)
 
-This helper method is used to define a component (engine) as a dependency when using a [shared Gemfile.lock](../recipes/gemfiles.md) for all engines.
+This helper method is used to define a component (engine) as a dependency when using a [shared Gemfile.lock](../../guides/gemfiles.md) for all engines.
 
 It does the following three things:
 
