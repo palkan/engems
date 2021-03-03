@@ -10,12 +10,4 @@ end
 gemspec
 
 eval_gemfile "./Gemfile.runtime"
-
-eval_gemfile "../../gems/shared-testing/Gemfile.runtime"
-gem "shared-testing", path: "../../gems/shared-testing"
-
-gem "shared-rubocop", path: "../../gems/shared-rubocop"
-
-# Speed up application code loading
-# https://github.com/Shopify/bootsnap
-gem "bootsnap", ">= 1.4.3", require: false
+eval_gemfile "./Gemfile.dev"

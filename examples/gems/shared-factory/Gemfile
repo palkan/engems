@@ -10,5 +10,4 @@ end
 gemspec
 
 eval_gemfile "./Gemfile.runtime"
-
-gem "shared-rubocop", path: "../shared-rubocop"
+eval_gemfile "./Gemfile.dev"

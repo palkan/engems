@@ -10,7 +10,8 @@ It does the following three things:
 
 - Define the component as a dependency for `:default` and its own **named group** (`gem "component", path: "engines/component"`, group: [:default, :component]).
 - Loads the component's `Gemfile.runtime` if any to the same groups (`eval_gemfile "engines/component/Gemfile.runtime"`).
-- Adds all development dependencies from the `component.gemspec` **only to the component group** (`gem "dev-dep", group: [:component]).
+- Loads the component's `Gemfile.dev` if any to the same groups (`eval_gemfile "engines/component/Gemfile.dev"`).
+- Adds all development dependencies from the `component.gemspec` **only to the component group** (similar to `gem "dev-dep", group: [:component]).
 
 ## `#eval_gemfile` patch
 

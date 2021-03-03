@@ -1,0 +1,6 @@
+# frozen_string_literal: true
+
+eval_gemfile "../shared-testing/Gemfile.runtime"
+gem "shared-testing", path: "../shared-testing"
+
+gem "shared-rubocop", path: "../shared-rubocop"

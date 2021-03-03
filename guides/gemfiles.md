@@ -1,12 +1,22 @@
 # Gemfiles and gemspecs organization
 
-## `Gemfile`, `Gemfile.runtime` and `.gemspec`
+## `Gemfile.dev`, `Gemfile.runtime` and `.gemspec`
 
 We use the following approach to define gems/engines dependencies and requirements:
 
 - `<gem>/<gem>.gemspec` – this is Gem specification; it defines **requirements** for this gem (for runtime and development); all required libraries (even _local_) must be specified in the gemspec: we use this information when checking _dirtyness_ of gems on CI (see [dirty-ci](../scripts/dirty-ci/README.md))
 - `<gem>/Gemfile.runtime` – defines where to find non-RubyGems **runtime** dependencies (local and GitHub); this file is used by other gems via the [`eval_gemfile`](../scripts/bundler/README.md#eval_gemfile) method.
-- `<gem>/Gemfile` – defines where to find non-RubyGems **development** dependencies (local and GitHub); always _includes_ (via `eval_gemfile`) the `Gemfile.runtime` file.
+- `<gem>/Gemfile.dev` – defines where to find non-RubyGems **development** dependencies (local and GitHub); always _includes_ (via `eval_gemfile`) the `Gemfile.runtime` file.
+- `<gem>/Gemfile` – only used for isolated development and contains the following:
+
+```ruby
+source "https://rubygems.org"
+
+gemspec
+
+eval_gemfile "./Gemfile.dev"
+eval_gemfile "./Gemfile.runtime"
+```
 
 ## Universal Gemfile
 
